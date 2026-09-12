@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ECTO OS — Native Audio Lab</title>
+<style>
+body{margin:0;background:#020602;color:#9cff9c;font-family:monospace;padding:24px}
+h1{color:#ffb000;font-size:20px}.note{border:1px solid #39a9ff;padding:12px;margin:12px 0}
+.test{margin:20px 0;border:1px solid #39a9ff;padding:14px}
+button{width:100%;padding:16px;background:#071407;color:#9cff9c;border:1px solid #39a9ff;font:inherit;margin:8px 0}
+button:active{background:#123012}
+audio{width:100%;margin-top:8px}
+.status{min-height:24px;color:#ffb000}
+</style>
+</head>
+<body>
+<h1>ECTO OS — NATIVE AUDIO LAB</h1>
+<div class="note">iPad-only prototype. This page is separate from the live ECTO OS. The native audio controls are intentionally visible for the experiment.</div>
+
+<div class="test">
+  <div>TEST A — NATIVE CONTROL</div>
+  <audio id="a" controls playsinline preload="auto" src="./sounds/pack-connect.mp3"></audio>
+  <div class="status" id="sa">Use the native play control above.</div>
+</div>
+
+<div class="test">
+  <div>TEST B — BUTTON + DIRECT PLAY</div>
+  <button id="b">CONNECT PACK — BUTTON TEST</button>
+  <div class="status" id="sb">Waiting…</div>
+  <audio id="bAudio" controls playsinline preload="auto" src="./sounds/pack-connect.mp3"></audio>
+</div>
+
+<div class="test">
+  <div>TEST C — NATIVE CONTROL OVER ECTO BUTTON</div>
+  <button id="c">CONNECT PACK — PRESS HERE</button>
+  <audio id="cAudio" controls playsinline preload="auto" src="./sounds/pack-connect.mp3"></audio>
+  <div class="status" id="sc">This test checks whether a native audio click can coexist with a button click handler.</div>
+</div>
+
+<script>
+const b=document.getElementById('b'), ba=document.getElementById('bAudio');
+b.addEventListener('click',()=>{
+  document.getElementById('sb').textContent='Button handler fired. Attempting direct native play…';
+  ba.currentTime=0;
+  const p=ba.play();
+  if(p) p.then(()=>document.getElementById('sb').textContent='PLAY PROMISE RESOLVED')
+    .catch(e=>document.getElementById('sb').textContent='PLAY REJECTED: '+e.name);
+});
+const c=document.getElementById('c'), ca=document.getElementById('cAudio');
+c.addEventListener('click',()=>{
+  document.getElementById('sc').textContent='ECTO button handler fired.';
+});
+ca.addEventListener('play',()=>document.getElementById('sc').textContent='Native audio play event fired.');
+</script>
+</body>
+</html>
